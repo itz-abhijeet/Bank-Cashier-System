@@ -1,14 +1,14 @@
 class Customer {
-    private int customerId;
-    private long arrivalTime;
+    private final String customerName;
+    private final long arrivalTime;
 
-    public Customer(int customerId) {
-        this.customerId = customerId;
+    public Customer(String customerName) {
+        this.customerName = customerName;
         this.arrivalTime = System.currentTimeMillis();
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public String getCustomerName() {
+        return customerName;
     }
 
     public long getArrivalTime() {

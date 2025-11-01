@@ -6,6 +6,7 @@ public class BankApp extends JPanel {
     private final BankCashier bankCashier;
     private final JTextArea queueTextArea;
     private final JLabel statusLabel;
+    private final JTextField nameTextField;
 
     public BankApp() {
         bankCashier = new BankCashier();
@@ -32,12 +33,23 @@ public class BankApp extends JPanel {
         add(queuePanel, BorderLayout.CENTER);
 
         // Control Panel
-        JPanel controlPanel = new JPanel(new GridLayout(1, 2, 10, 10));
+        JPanel controlPanel = new JPanel(new BorderLayout(10, 0));
         controlPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JPanel inputPanel = new JPanel(new BorderLayout(5, 0));
+        JLabel nameLabel = new JLabel("Customer Name:");
+        nameTextField = new JTextField();
+        inputPanel.add(nameLabel, BorderLayout.WEST);
+        inputPanel.add(nameTextField, BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2, 10, 0));
         JButton addCustomerButton = new JButton("Add Customer");
         JButton serveCustomerButton = new JButton("Serve Customer");
-        controlPanel.add(addCustomerButton);
-        controlPanel.add(serveCustomerButton);
+        buttonPanel.add(addCustomerButton);
+        buttonPanel.add(serveCustomerButton);
+
+        controlPanel.add(inputPanel, BorderLayout.CENTER);
+        controlPanel.add(buttonPanel, BorderLayout.EAST);
         add(controlPanel, BorderLayout.SOUTH);
 
         // Status Panel
@@ -49,11 +61,19 @@ public class BankApp extends JPanel {
         add(statusPanel, BorderLayout.EAST);
 
         // Action Listeners
-        addCustomerButton.addActionListener(e -> {
-            bankCashier.addCustomer();
-            refreshUI();
-        });
+        addCustomerButton.addActionListener(e -> addCustomer());
         serveCustomerButton.addActionListener(e -> serveCustomer());
+    }
+
+    private void addCustomer() {
+        String customerName = nameTextField.getText().trim();
+        if (!customerName.isEmpty()) {
+            bankCashier.addCustomer(customerName);
+            nameTextField.setText("");
+            refreshUI();
+        } else {
+            JOptionPane.showMessageDialog(this, "Please enter a customer name.", "Input Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void serveCustomer() {
@@ -82,7 +102,7 @@ public class BankApp extends JPanel {
         List<Customer> queueContents = bankCashier.getQueueContents();
         StringBuilder queueText = new StringBuilder();
         for (Customer customer : queueContents) {
-            queueText.append("Customer ").append(customer.getCustomerId()).append("\n");
+            queueText.append(customer.getCustomerName()).append("\n");
         }
         queueTextArea.setText(queueText.toString());
 

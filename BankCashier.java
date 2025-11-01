@@ -2,18 +2,16 @@ import java.util.List;
 
 class BankCashier {
     private final Queue customerQueue;
-    private int nextCustomerId;
     private boolean isServing;
 
     public BankCashier() {
         customerQueue = new Queue(10);
-        nextCustomerId = 1;
         isServing = false;
     }
 
-    public synchronized void addCustomer() {
+    public synchronized void addCustomer(String customerName) {
         if (!customerQueue.isFull()) {
-            customerQueue.enqueue(new Customer(nextCustomerId++));
+            customerQueue.enqueue(new Customer(customerName));
         }
     }
 
